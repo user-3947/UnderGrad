@@ -1,10 +1,10 @@
-import React from 'react'
+// import React from 'react'
 
 const Feedback = () => {
   
-  const [formData, setformData] = React.useState([
-    { name: '', yoj: '', course: '' , description: ''}
-  ]);
+  // const [formData, setformData] = React.useState([
+  //   { name: '', yoj: '', course: '' , description: ''}
+  // ]);
 
     return (
     <>

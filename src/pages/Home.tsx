@@ -1,4 +1,4 @@
-import Feedback from "../components/Feedback";
+// import Feedback from "../components/Feedback";
 import Header from "../components/Header";
 import NameCards from "../components/NameCards";
 // import SearchBar from "../components/SearchBar";
