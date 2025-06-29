@@ -1,4 +1,5 @@
-import React from "react";
+import { FaDownload } from "react-icons/fa";
+// import { useNavigate } from "react-router-dom";
 
 interface StorageItem {
   name: string;
@@ -11,19 +12,18 @@ interface NameCardsProps {
   emptyMessage?: string;
 }
 
-const NameCards: React.FC<NameCardsProps> = ({ 
-  items, 
-  onItemClick, 
-  emptyMessage = "No items found" 
+const NameCards: React.FC<NameCardsProps> = ({
+  items,
+  onItemClick,
+  emptyMessage = "No items found",
 }) => {
-
-if (items.length === 0) {
+  if (items.length === 0) {
     return <div className="p-4 text-gray-500">{emptyMessage}</div>;
   }
 
-// Separate folders and files for better organization
-  const folders = items.filter(item => item.isFolder);
-  const files = items.filter(item => !item.isFolder);
+  // Separate folders and files for better organization
+  const folders = items.filter((item) => item.isFolder);
+  const files = items.filter((item) => !item.isFolder);
 
   return (
     <div className="space-y-6">
@@ -50,22 +50,58 @@ if (items.length === 0) {
   );
 };
 
+// Helper to construct file URLs (adjust as needed)
+function getFileUrl(folder: string, fileName: string): string {
+  // Example: `/resources/filename`
+  return `/${folder}/${encodeURIComponent(fileName)}`;
+}
+
 // Reusable Card component
-const Card: React.FC<{ item: StorageItem; onClick: (item: StorageItem) => void }> = ({ 
-  item, 
-  onClick 
-}) => {
-  
+const Card: React.FC<{
+  item: StorageItem;
+  onClick: (item: StorageItem) => void;
+}> = ({ item, onClick }) => {
+  // Construct the file URL if it's a file
+  const fileUrl = !item.isFolder
+    ? getFileUrl("resources", item.name) // Adjust as needed for your path logic
+    : null;
+
+    // const navigate = useNavigate();
+    const handleDownload = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card click
+if (fileUrl) {
+      // Pass fileUrl as a query parameter
+      // navigate(`/filedownloader?url=${encodeURIComponent(fileUrl)}`);
+      window.open(`/filedownloader?url=${encodeURIComponent(fileUrl)}`, '_blank', 'noopener,noreferrer');
+
+      // Or, to use state instead:
+      // navigate('/filedownloader', { state: { url: fileUrl } });
+    }  }
+
   return (
     <div
-      className={`p-4 text-center rounded-lg transition-all cursor-pointer
-        ${item.isFolder ? 'bg-blue-50 hover:bg-blue-100' : 'bg-green-50 hover:bg-green-100'}
-        hover:-translate-y-1 hover:shadow-md flex flex-col items-center`}
+      className="p-4 text-center rounded-lg bg-card active:bg-card-active flex flex-col items-center"
       onClick={() => onClick(item)}
     >
-      <div className="truncate w-full">{item.name}</div>
+      <div className="w-full text-text flex justify-center items-center">
+        <div className="truncate r-4">{item.name}</div>
+        <div className="items-center flex ml-2">
+          {!item.isFolder && fileUrl && (
+          // <a
+          //   href={fileUrl}
+          //   download={item.name}
+          //   onClick={(e) => e.stopPropagation()} // Prevent card click
+          //   className="ml-2 text-indigo-500 hover:text-indigo-700"
+          //   title="Download"
+          // >
+            <FaDownload onClick={handleDownload} />
+          // </a>
+        )}
+        </div>
+      </div>
+      
     </div>
   );
 };
 
-export default NameCards
+export default NameCards;

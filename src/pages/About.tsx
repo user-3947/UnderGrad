@@ -1,17 +1,24 @@
-import Header from '../components/Header'
+import Header from "../components/Header";
+import { useEffect, useState } from "react";
+import ReactMarkdown from "react-markdown";
 
 const About = () => {
+  const [markdown, setMarkdown] = useState("");
+
+  useEffect(() => {
+    fetch("/README.md")
+      .then((res) => res.text())
+      .then(setMarkdown);
+  }, []);
+
   return (
     <>
-        <Header/>
-        <div className='about border w-[90%] mx-auto'>
-        <p className='text-center'>
-            <b className='text-2xl'>what is UnderGrad -</b> An e-library for students in their undergraduate program. It is a platform that provides access to all papers required from exam point of view including Machine Learning, Internet of Things, and other subjects. It is a free resource for students to access and download papers. No login required.
-            <br/>Any issues regarding notes, application or adding resources feel free to mention it in the feedback section or can contact me personally
-        </p>
-    </div>
+      <Header />
+      <div className="container p-4 text-text ">
+        <ReactMarkdown>{markdown}</ReactMarkdown>
+      </div>
     </>
-  )
-}
+  );
+};
 
-export default About
+export default About;

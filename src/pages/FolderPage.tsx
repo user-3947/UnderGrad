@@ -1,7 +1,7 @@
 // pages/FolderPage.tsx
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getStorageItems, getFileUrl } from '../utils/storage';
+import { getStorageItems} from '../utils/storage';
 import NameCards from '../components/NameCards';
 import Header from '../components/Header';
 
@@ -35,24 +35,15 @@ const FolderPage: React.FC = () => {
       navigate(`/folder/${encodeURIComponent(newPath)}`);
     } else {
       const filePath = folderName ? `${folderName}/${item.name}` : item.name;
-      const fileUrl = getFileUrl('resources', filePath);
-      window.open(fileUrl, '_blank', 'noopener,noreferrer');
+      window.open(`/file/${encodeURIComponent(filePath)}`, '_blank', 'noopener,noreferrer');
     }
   };
 
   return (
     <>
-    {/* 
-    <div className="folder-page p-4">
-      <h1 className="text-xl font-bold mb-4">{folderName}</h1>
-      <NameCards items={files} isFolder={false} />
-    </div> */}
-
     <Header/>
     <div className="p-4">
-      <h1 className="text-xl font-bold mb-4">
-        {folderName ? folderName : 'Root Directory'}
-      </h1>
+      <h1 className="text-xl font-bold mb-4 text-text">{folderName}</h1>
       <NameCards 
         items={items} 
         onItemClick={handleItemClick}
