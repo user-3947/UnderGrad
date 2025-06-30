@@ -14,6 +14,7 @@ const FileViewer: React.FC = () => {
   const isPpt = filePath.endsWith(".ppt") || filePath.endsWith(".pptx");
 
   const isGoogleViewable = isWord || isExcel || isPpt || isPdf;
+  
 
   return (
     <>

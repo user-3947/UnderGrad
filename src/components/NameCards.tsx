@@ -1,5 +1,6 @@
 import { FaDownload } from "react-icons/fa";
-// import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import Popunder from "../MoneTag/Popunder";
 
 interface StorageItem {
   name: string;
@@ -66,16 +67,12 @@ const Card: React.FC<{
     ? getFileUrl("resources", item.name) // Adjust as needed for your path logic
     : null;
 
-    // const navigate = useNavigate();
-    const handleDownload = (e: React.MouseEvent) => {
+    const [showPopunder, setShowPopunder] = useState(false);    const handleDownload = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click
-if (fileUrl) {
+    setShowPopunder(true); // Show popunder
+    if (fileUrl) {
       // Pass fileUrl as a query parameter
-      // navigate(`/filedownloader?url=${encodeURIComponent(fileUrl)}`);
       window.open(`/filedownloader?url=${encodeURIComponent(fileUrl)}`, '_blank', 'noopener,noreferrer');
-
-      // Or, to use state instead:
-      // navigate('/filedownloader', { state: { url: fileUrl } });
     }  }
 
   return (
@@ -87,15 +84,10 @@ if (fileUrl) {
         <div className="truncate r-4">{item.name}</div>
         <div className="items-center flex ml-2">
           {!item.isFolder && fileUrl && (
-          // <a
-          //   href={fileUrl}
-          //   download={item.name}
-          //   onClick={(e) => e.stopPropagation()} // Prevent card click
-          //   className="ml-2 text-indigo-500 hover:text-indigo-700"
-          //   title="Download"
-          // >
-            <FaDownload onClick={handleDownload} />
-          // </a>
+            <>
+              <FaDownload onClick={handleDownload} />
+              {showPopunder && <Popunder/>}
+            </>
         )}
         </div>
       </div>

@@ -1,9 +1,11 @@
-// pages/FolderPage.tsx
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getStorageItems} from '../utils/storage';
 import NameCards from '../components/NameCards';
 import Header from '../components/Header';
+import PushNotification from '../MoneTag/PushNotification';
+import VignetteBanner from '../MoneTag/VignetteBanner';
+import Popunder from '../MoneTag/Popunder';
 
 interface StorageItem {
   name: string;
@@ -29,7 +31,9 @@ const FolderPage: React.FC = () => {
     fetchFiles();
   }, [folderName]);
 
-   const handleItemClick = (item: StorageItem) => {
+  const [showPopunder, setShowPopunder] = useState(false);
+  const handleItemClick = (item: StorageItem) => {
+    setShowPopunder(true);
     if (item.isFolder) {
       const newPath = folderName ? `${folderName}/${item.name}` : item.name;
       navigate(`/folder/${encodeURIComponent(newPath)}`);
@@ -42,6 +46,8 @@ const FolderPage: React.FC = () => {
   return (
     <>
     <Header/>
+    <PushNotification/>
+    <VignetteBanner/>
     <div className="p-4">
       <h1 className="text-xl font-bold mb-4 text-text">{folderName}</h1>
       <NameCards 
@@ -49,6 +55,7 @@ const FolderPage: React.FC = () => {
         onItemClick={handleItemClick}
         emptyMessage="This folder is empty"
       />
+      {showPopunder && <Popunder />}
     </div>
     </>
   );
