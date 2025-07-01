@@ -3,9 +3,10 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getStorageItems} from '../utils/storage';
 import NameCards from '../components/NameCards';
 import Header from '../components/Header';
-import PushNotification from '../MoneTag/PushNotification';
+// import PushNotification from '../MoneTag/PushNotification';
 import VignetteBanner from '../MoneTag/VignetteBanner';
 import Popunder from '../MoneTag/Popunder';
+import InPagePush from '../MoneTag/InPagePush';
 
 interface StorageItem {
   name: string;
@@ -46,7 +47,8 @@ const FolderPage: React.FC = () => {
   return (
     <>
     <Header/>
-    <PushNotification/>
+    {/* <PushNotification/> */}
+    <InPagePush/>
     <VignetteBanner/>
     <div className="p-4">
       <h1 className="text-xl font-bold mb-4 text-text">{folderName}</h1>
