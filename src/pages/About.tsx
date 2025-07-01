@@ -1,9 +1,10 @@
 import Header from "../components/Header";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import Multitag from "../MoneTag/Multitag";
 // import PushNotification from "../MoneTag/PushNotification";
-import VignetteBanner from "../MoneTag/VignetteBanner";
-import InPagePush from "../MoneTag/InPagePush";
+// import VignetteBanner from "../MoneTag/VignetteBanner";
+// import InPagePush from "../MoneTag/InPagePush";
 
 const About = () => {
   const [markdown, setMarkdown] = useState("");
@@ -18,8 +19,9 @@ const About = () => {
     <>
       <Header />
       {/* <PushNotification /> */}
-      <InPagePush />
-      <VignetteBanner />
+      {/* <InPagePush /> */}
+      {/* <VignetteBanner /> */}
+      <Multitag />
       <div className="container p-4 text-text ">
         <ReactMarkdown>{markdown}</ReactMarkdown>
       </div>

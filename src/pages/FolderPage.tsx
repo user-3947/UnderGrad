@@ -4,9 +4,10 @@ import { getStorageItems} from '../utils/storage';
 import NameCards from '../components/NameCards';
 import Header from '../components/Header';
 // import PushNotification from '../MoneTag/PushNotification';
-import VignetteBanner from '../MoneTag/VignetteBanner';
+// import VignetteBanner from '../MoneTag/VignetteBanner';
 import Popunder from '../MoneTag/Popunder';
-import InPagePush from '../MoneTag/InPagePush';
+// import InPagePush from '../MoneTag/InPagePush';
+import Multitag from '../MoneTag/Multitag';
 
 interface StorageItem {
   name: string;
@@ -34,12 +35,15 @@ const FolderPage: React.FC = () => {
 
   const [showPopunder, setShowPopunder] = useState(false);
   const handleItemClick = (item: StorageItem) => {
-    setShowPopunder(true);
     if (item.isFolder) {
       const newPath = folderName ? `${folderName}/${item.name}` : item.name;
+      setShowPopunder(true);
+      setTimeout(() => setShowPopunder(false), 5000); // Hide after 5 seconds
       navigate(`/folder/${encodeURIComponent(newPath)}`);
     } else {
       const filePath = folderName ? `${folderName}/${item.name}` : item.name;
+      setShowPopunder(true);
+      setTimeout(() => setShowPopunder(false), 5000); // Hide after 5 seconds
       window.open(`/file/${encodeURIComponent(filePath)}`, '_blank', 'noopener,noreferrer');
     }
   };
@@ -48,8 +52,9 @@ const FolderPage: React.FC = () => {
     <>
     <Header/>
     {/* <PushNotification/> */}
-    <InPagePush/>
-    <VignetteBanner/>
+    {/* <InPagePush/> */}
+    {/* <VignetteBanner/> */}
+    <Multitag/>
     <div className="p-4">
       <h1 className="text-xl font-bold mb-4 text-text">{folderName}</h1>
       <NameCards 
