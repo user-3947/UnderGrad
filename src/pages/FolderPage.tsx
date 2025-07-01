@@ -54,7 +54,6 @@ const FolderPage: React.FC = () => {
     {/* <PushNotification/> */}
     {/* <InPagePush/> */}
     {/* <VignetteBanner/> */}
-    <Multitag/>
     <div className="p-4">
       <h1 className="text-xl font-bold mb-4 text-text">{folderName}</h1>
       <NameCards 
@@ -64,6 +63,7 @@ const FolderPage: React.FC = () => {
       />
       {showPopunder && <Popunder />}
     </div>
+    <Multitag/>
     </>
   );
 };
