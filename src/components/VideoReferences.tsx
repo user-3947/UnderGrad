@@ -8,8 +8,7 @@ const VideoReferences = ({name}: {name: string}) => {
       .then((module) => {
         setFileContent(module.default);
       })
-      .catch((error) => {
-        // console.error removed
+      .catch(() => {
       });
   }, [name]);
 

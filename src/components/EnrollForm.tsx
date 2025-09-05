@@ -48,7 +48,7 @@ const EnrollForm = ({ isOpen, onClose }: EnrollFormProps) => {
       }
       
     try {
-        const { data, error } = await supabase.from('enroll').insert([
+        const { error } = await supabase.from('enroll').insert([
           {
             rno: formData.rno,
             name: formData.name,
