@@ -5,12 +5,14 @@ import Popunder from "../MoneTag/Popunder";
 interface StorageItem {
   name: string;
   isFolder: boolean;
+  bucket: string;
 }
 
 interface NameCardsProps {
   items: StorageItem[];
   onItemClick: (item: StorageItem) => void;
   emptyMessage?: string;
+  isResources?: boolean; // New prop to differentiate between resources and exam notes
 }
 
 const NameCards: React.FC<NameCardsProps> = ({
@@ -52,9 +54,9 @@ const NameCards: React.FC<NameCardsProps> = ({
 };
 
 // Helper to construct file URLs (adjust as needed)
-function getFileUrl(folder: string, fileName: string): string {
+function getFileUrl(bucket: string, fileName: string): string {
   // Example: `/resources/filename`
-  return `/${folder}/${encodeURIComponent(fileName)}`;
+  return `/${bucket}/${encodeURIComponent(fileName)}`;
 }
 
 // Reusable Card component
@@ -64,7 +66,7 @@ const Card: React.FC<{
 }> = ({ item, onClick }) => {
   // Construct the file URL if it's a file
   const fileUrl = !item.isFolder
-    ? getFileUrl("resources", item.name) // Adjust as needed for your path logic
+    ? getFileUrl(item.bucket, item.name) // Adjust as needed for your path logic
     : null;
 
     const [showPopunder, setShowPopunder] = useState(false);    const handleDownload = (e: React.MouseEvent) => {

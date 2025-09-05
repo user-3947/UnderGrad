@@ -1,16 +1,23 @@
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import Feedback from "../components/Feedback";
 import Header from "../components/Header";
 import NameCards from "../components/NameCards";
 // import SearchBar from "../components/SearchBar";
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { getStorageItems, getFileUrl } from '../utils/storage';
-// import PushNotification from "../MoneTag/PushNotification";
-import InPagePush from "../MoneTag/InPagePush";
+import PushNotification from "../MoneTag/PushNotification";
+// import InPagePush from "../MoneTag/InPagePush";
+import VignetteBanner from '../MoneTag/VignetteBanner';
+import Popunder from '../MoneTag/Popunder';
+import Interstitial from '../MoneTag/Interstitial';
+// import Multitag from "../MoneTag/Multitag";
+import { supabase } from "../lib/supabaseClient";
 
 interface StorageItem {
   name: string;
   isFolder: boolean;
+  bucket: string;
 }
 
 interface Option {
@@ -21,8 +28,11 @@ interface Option {
 const Home: React.FC = () => {
   const navigate = useNavigate();
   const [items, setItems] = useState<StorageItem[]>([]);
+  const [notes, setNotes] = useState<StorageItem[]>([]);
   const [CourseSelectedValue, setCourseSelectedValue] = useState<Option | null>(null);
   const [BatchSelectedValue, setBatchSelectedValue] = useState<Option | null>(null);
+  
+  const [showExamNotes, setShowExamNotes] = useState(true);
 
   const courses = [
     { label: 'B.Sc. (C.S.)', id: 0 },
@@ -40,18 +50,41 @@ const Home: React.FC = () => {
     { label: '22', id: 8 }
   ];
 
-  useEffect(() => {
-    async function fetchItems() {
-      try {
-        const items = await getStorageItems('resources');
-        setItems(items);
-      } catch (error) {
-        console.error('Error loading items:', error);
-      } finally {
-      }
-    }
+useEffect(() => {
+  async function fetchItems() {
+    try {
+      const [rawItems, rawNotes] = await Promise.all([
+        getStorageItems('resources'),
+        getStorageItems('examNotes')
+      ]);
+      // Add bucket property to each item
+      const items = rawItems.map(item => ({ ...item, bucket: 'resources' }));
+      const notes = rawNotes.map(item => ({ ...item, bucket: 'examNotes' }));
+      setItems(items);
+      setNotes(notes);
+    } catch (error) {
+      // handle error
+    } 
+  }
 
-    fetchItems();
+  fetchItems();
+}, []);
+
+  useEffect(() => {
+    const checkEnroll = async () => {
+      const id = localStorage.getItem("enroll_id");
+      if (!id) return;
+
+      const { data } = await supabase
+        .from("enroll")
+        .select("*")
+        .eq("rno", id)
+        .single();
+
+      if (data) setShowExamNotes(true);
+    };
+
+    checkEnroll();
   }, []);
 
    const handleItemClick = (item: StorageItem) => {
@@ -59,7 +92,17 @@ const Home: React.FC = () => {
       navigate(`/folder/${encodeURIComponent(item.name)}`);
     } else {
       // Handle file click in root directory
-      const fileUrl = getFileUrl('resources', item.name);
+      const fileUrl = getFileUrl(item.bucket, item.name);
+      window.open(fileUrl, '_blank', 'noopener,noreferrer'); {/*file opener*/}
+    }
+  };
+
+     const handleExamNotesClick = (note: StorageItem) => {
+    if (note.isFolder) {
+      navigate(`/folder/${encodeURIComponent(note.name)}`);
+    } else {
+      // Handle file click in root directory
+      const fileUrl = getFileUrl(note.bucket, note.name);
       window.open(fileUrl, '_blank', 'noopener,noreferrer'); {/*file opener*/}
     }
   };
@@ -67,15 +110,39 @@ const Home: React.FC = () => {
   return (
     <>
     <Header/>
-    {/* <PushNotification/> */}
-    <InPagePush/>
+    <PushNotification/>
+    {/* <InPagePush/> */}
+    <VignetteBanner/>
+    <Popunder/>
+    <Interstitial/>
+    {/* <Multitag /> */}
     <div className="p-4 lg:h-[90vh] h-[100vh] overflow-y-auto">
       <h1 className="title text-xl font-bold mb-4 text-text">Resources</h1>
       <NameCards 
         items={items} 
         onItemClick={handleItemClick}
         emptyMessage="No items found in root directory"
+        isResources={true}
       />
+
+      {showExamNotes ? (
+        <>
+          <div className="title text-xl font-bold text-text mt-4">Entrance Exam Notes</div> 
+          <div className="mb-2 text-red text-xs">Note: The notes are meant only for reference. You CAN'T download or share it with others.</div>
+          <NameCards 
+            items={notes} 
+            onItemClick={handleExamNotesClick}
+            emptyMessage="No Entrance Exam Notes found"
+            isResources={false}
+          />
+        </>
+      ): (
+        <>
+        <hr className="my-4" />
+        <div className=" mb-4 text-text mt-4">Enroll to access Entrance Exam Notes</div>
+        </>
+      )}      
+      
      </div>
     {/* <SearchBar/> */}
     <Feedback

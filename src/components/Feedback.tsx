@@ -1,12 +1,12 @@
 import { useState, type SetStateAction, type JSX, useEffect } from 'react';
+
 import arrow_down7F7F7F from '../assets/arrow_down7F7F7F.svg';
 import arrow_up7F7F7F from '../assets/arrow_up7F7F7F.svg';
 import { FaStar } from "react-icons/fa6";
 import { FaRegStar } from "react-icons/fa";
 import { FaStarHalf } from "react-icons/fa";
+
 import { supabase } from '../lib/supabaseClient';
-
-
 
 interface Option{
     label: string;
@@ -55,7 +55,7 @@ const Feedback: React.FC<DropdownProps> = ({
       .select('*')
       .order('id', { ascending: false });
     if (error) {
-      console.error('Error fetching feedback:', error);
+      // console.error removed
     } else {
       setFeedback(data as Feedback[]);
     }
@@ -100,7 +100,6 @@ const Feedback: React.FC<DropdownProps> = ({
           }
         ]);
       if (error) {
-        console.error('Error inserting feedback:', error);
         setError('An error occurred while submitting feedback');
         return;
       }
@@ -202,7 +201,7 @@ const Feedback: React.FC<DropdownProps> = ({
 
       <form
   onSubmit={handleSubmit}
-  className="sticky bottom-0 mt-20 grid grid-cols-2 gap-3 border-card rounded-lg p-6 bg-card shadow-lg min-w-[320px] max-w-[400px] mx-auto "> {/*Feedback Form*/}
+  className="sticky bottom-0 mt-20 grid grid-cols-2 gap-3 rounded-lg p-6 bg-card min-w-[320px] max-w-[400px] mx-auto "> {/*Feedback Form*/}
   {error && (
     <div className="col-span-2 text-red text-center mb-2">{error}</div> // Error message
   )}

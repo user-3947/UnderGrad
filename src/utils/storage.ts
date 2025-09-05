@@ -11,7 +11,7 @@ export async function getStorageItems(bucketName: string, path = '') {
       });
 
     if (error) {
-      console.error('Error fetching storage items:', error);
+      // console.error removed
       return [];
     }
 
@@ -23,14 +23,20 @@ export async function getStorageItems(bucketName: string, path = '') {
         isFolder: !item.id // Folders don't have IDs in Supabase
       }));
   } catch (err) {
-    console.error('Unexpected error:', err);
+    // console.error removed
     return [];
   }
 }
 
 export function getFileUrl(bucketName: string, filePath: string) {
+  // Do NOT encode the path here - Supabase's getPublicUrl will handle this correctly
+  // Just ensure the path is properly formatted
+  const sanitizedPath = filePath.trim();
+  
   const { data } = supabase.storage
     .from(bucketName)
-    .getPublicUrl(filePath);
+    .getPublicUrl(sanitizedPath);
+  
+  // console.log removed
   return data.publicUrl;
 }

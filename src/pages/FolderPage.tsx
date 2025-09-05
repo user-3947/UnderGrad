@@ -1,32 +1,51 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { getStorageItems} from '../utils/storage';
-import NameCards from '../components/NameCards';
-import Header from '../components/Header';
-// import PushNotification from '../MoneTag/PushNotification';
-// import VignetteBanner from '../MoneTag/VignetteBanner';
-import Popunder from '../MoneTag/Popunder';
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+
+import { getStorageItems } from "../utils/storage";
+import NameCards from "../components/NameCards";
+import Header from "../components/Header";
+import PushNotification from '../MoneTag/PushNotification';
+import VignetteBanner from '../MoneTag/VignetteBanner';
+import Popunder from "../MoneTag/Popunder";
+import Interstitial from "../MoneTag/Interstitial";
 // import InPagePush from '../MoneTag/InPagePush';
-import Multitag from '../MoneTag/Multitag';
+// import Multitag from "../MoneTag/Multitag";
+import VideoReferences from "../components/VideoReferences";
 
 interface StorageItem {
   name: string;
   isFolder: boolean;
+  bucket: string;
 }
 
 const FolderPage: React.FC = () => {
-    const { folderName } = useParams<{ folderName?: string }>();
+  const { folderName } = useParams<{ folderName?: string }>();
   const navigate = useNavigate();
   const [items, setItems] = useState<StorageItem[]>([]);
+  // const [notes, setNotes] = useState<StorageItem[]>([]); //for exam notes
 
-   useEffect(() => {
+
+  useEffect(() => {
+
     async function fetchFiles() {
       try {
-        const pathToFetch = folderName ? decodeURIComponent(folderName) : '';
-        const items = await getStorageItems('resources', pathToFetch);
-        setItems(items);
+        const pathToFetch = folderName ? decodeURIComponent(folderName) : "";
+        const [resourceItems, examNotesItems] = await Promise.all([
+          getStorageItems("resources", pathToFetch),
+          getStorageItems("examNotes", pathToFetch)
+        ]);
+        // Add bucket property to each item
+        const resourcesWithBucket = resourceItems.map(item => ({
+          ...item,
+          bucket: "resources"
+        }));
+        const examNotesWithBucket = examNotesItems.map(item => ({
+          ...item,
+          bucket: "examNotes"
+        }));
+        // Combine both arrays
+        setItems([...resourcesWithBucket, ...examNotesWithBucket]);
       } catch (error) {
-        console.error('Error loading items:', error);
       }
     }
 
@@ -44,26 +63,43 @@ const FolderPage: React.FC = () => {
       const filePath = folderName ? `${folderName}/${item.name}` : item.name;
       setShowPopunder(true);
       setTimeout(() => setShowPopunder(false), 5000); // Hide after 5 seconds
-      window.open(`/file/${encodeURIComponent(filePath)}`, '_blank', 'noopener,noreferrer');
+      
+      // For file paths, we need to ensure they're properly formatted for the router
+      // The + in the route definition means we need to ensure the path is correctly formatted
+      // Don't over-encode the path as React Router will handle some of this
+      const fileViewerPath = `/file/${item.bucket}/${filePath}`;
+            
+      window.open(
+        fileViewerPath,
+        "_blank",
+        "noopener,noreferrer"
+      );
     }
   };
 
   return (
     <>
-    <Header/>
-    {/* <PushNotification/> */}
-    {/* <InPagePush/> */}
-    {/* <VignetteBanner/> */}
-    <div className="p-4">
-      <h1 className="text-xl font-bold mb-4 text-text">{folderName}</h1>
-      <NameCards 
-        items={items} 
-        onItemClick={handleItemClick}
-        emptyMessage="This folder is empty"
-      />
-      {showPopunder && <Popunder />}
-    </div>
-    <Multitag/>
+      <Header />
+      <PushNotification/>
+      {/* <InPagePush/> */}
+      <Interstitial/>
+      <VignetteBanner/>
+      <Popunder/>
+      {/* <Multitag/> */}
+      <div className="p-4">
+        <h1 className="text-xl font-bold mb-4 text-text">{folderName}</h1>
+        <NameCards
+          items={items}
+          onItemClick={handleItemClick}
+          emptyMessage="This folder is empty"
+        />
+        {showPopunder && <Popunder />}
+      </div>
+      {/* <Multitag /> */}
+
+      <hr className="my-4 border-t-2" />
+      
+      <VideoReferences name={folderName || ''} />
     </>
   );
 };
