@@ -29,7 +29,7 @@ const Header = () => {
         <EnrollForm isOpen={isEnrollOpen} onClose={() => setEnrollOpen(!isEnrollOpen)} />
       </div>
 
-      <button
+      {/* <button
             onClick={() => {
               localStorage.removeItem("enroll_id"); // 👈 clear for dev/test
               window.location.reload(); // refresh app
@@ -37,7 +37,7 @@ const Header = () => {
             className="bg-red-500 text-white px-3 py-1 rounded"
           >
             Reset (Dev)
-          </button>
+          </button> */}
 
     </div>
   )

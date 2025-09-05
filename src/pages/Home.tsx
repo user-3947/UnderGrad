@@ -32,7 +32,7 @@ const Home: React.FC = () => {
   const [CourseSelectedValue, setCourseSelectedValue] = useState<Option | null>(null);
   const [BatchSelectedValue, setBatchSelectedValue] = useState<Option | null>(null);
   
-  const [showExamNotes, setShowExamNotes] = useState(true);
+  const [showExamNotes, setShowExamNotes] = useState(false);
 
   const courses = [
     { label: 'B.Sc. (C.S.)', id: 0 },
@@ -128,7 +128,7 @@ useEffect(() => {
       {showExamNotes ? (
         <>
           <div className="title text-xl font-bold text-text mt-4">Entrance Exam Notes</div> 
-          <div className="mb-2 text-red text-xs">Note: The notes are meant only for reference. You CAN'T download or share it with others.</div>
+          <div className="mb-2 text-red text-xs">Note: The notes are meant only for reference. Kindly DON'T share with anyone.</div>
           <NameCards 
             items={notes} 
             onItemClick={handleExamNotesClick}
