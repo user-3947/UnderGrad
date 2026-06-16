@@ -5,12 +5,10 @@ import Feedback from "../components/Feedback";
 import Header from "../components/Header";
 import NameCards from "../components/NameCards";
 // import SearchBar from "../components/SearchBar";
-import { getStorageItems, getFileUrl } from '../utils/storage';
-import PushNotification from "../MoneTag/PushNotification";
-// import InPagePush from "../MoneTag/InPagePush";
-import VignetteBanner from '../MoneTag/VignetteBanner';
-import Popunder from '../MoneTag/Popunder';
-import Interstitial from '../MoneTag/Interstitial';
+import { getStorageItems, isSectionEnabled } from '../utils/storage';
+// MoneTag components (ads/scripts) disabled by default to avoid injecting third-party code
+// that may be blocked by adblockers and break the UI. To re-enable, import
+// and render them explicitly.
 // import Multitag from "../MoneTag/Multitag";
 import { supabase } from "../lib/supabaseClient";
 
@@ -55,16 +53,15 @@ useEffect(() => {
     try {
       const [rawItems, rawNotes] = await Promise.all([
         getStorageItems('resources'),
-        getStorageItems('examNotes')
+        isSectionEnabled('examNotes') ? getStorageItems('examNotes') : Promise.resolve([]),
       ]);
-      // Add bucket property to each item
       const items = rawItems.map(item => ({ ...item, bucket: 'resources' }));
       const notes = rawNotes.map(item => ({ ...item, bucket: 'examNotes' }));
       setItems(items);
       setNotes(notes);
     } catch (error) {
       // handle error
-    } 
+    }
   }
 
   fetchItems();
@@ -90,31 +87,24 @@ useEffect(() => {
    const handleItemClick = (item: StorageItem) => {
     if (item.isFolder) {
       navigate(`/folder/${encodeURIComponent(item.name)}`);
-    } else {
-      // Handle file click in root directory
-      const fileUrl = getFileUrl(item.bucket, item.name);
-      window.open(fileUrl, '_blank', 'noopener,noreferrer'); {/*file opener*/}
+      return;
     }
+    const viewerPath = `/file/${item.bucket}/${encodeURIComponent(item.name)}`;
+    window.open(viewerPath, '_blank', 'noopener,noreferrer');
   };
 
      const handleExamNotesClick = (note: StorageItem) => {
     if (note.isFolder) {
       navigate(`/folder/${encodeURIComponent(note.name)}`);
-    } else {
-      // Handle file click in root directory
-      const fileUrl = getFileUrl(note.bucket, note.name);
-      window.open(fileUrl, '_blank', 'noopener,noreferrer'); {/*file opener*/}
+      return;
     }
+    const viewerPath = `/file/${note.bucket}/${encodeURIComponent(note.name)}`;
+    window.open(viewerPath, '_blank', 'noopener,noreferrer');
   };
 
   return (
     <>
     <Header/>
-    <PushNotification/>
-    {/* <InPagePush/> */}
-    <VignetteBanner/>
-    <Popunder/>
-    <Interstitial/>
     {/* <Multitag /> */}
     <div className="p-4 lg:h-[90vh] h-[100vh] overflow-y-auto">
       <h1 className="title text-xl font-bold mb-4 text-text">Resources</h1>
@@ -125,7 +115,7 @@ useEffect(() => {
         isResources={true}
       />
 
-      {showExamNotes ? (
+      {/* {showExamNotes ? (
         <>
           <div className="title text-xl font-bold text-text mt-4">Entrance Exam Notes</div> 
           <div className="mb-2 text-red text-xs">Note: The notes are meant only for reference. Kindly DON'T share with anyone.</div>
@@ -141,7 +131,7 @@ useEffect(() => {
         <hr className="my-4" />
         <div className=" mb-4 text-text mt-4">Enroll to access Entrance Exam Notes</div>
         </>
-      )}      
+      )}       */}
       
      </div>
     {/* <SearchBar/> */}

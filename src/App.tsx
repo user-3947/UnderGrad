@@ -12,11 +12,7 @@ function App() {
 
         <Route path="/file/:bucket/*" element={<FileViewer />} />
 
-        <Route path="/folder">
-          <Route index element={<Home />} />
-          <Route path=":folderName" element={<FolderPage />} />
-          <Route path=":folderName/*" element={<FolderPage />} />
-        </Route>
+        <Route path="/folder/*" element={<FolderPage />} />
         {/* <Route path="/file/:filePath" element={<FileViewer />} /> */}
         <Route path="/filedownloader" element={<FileDownloader />} />
         <Route path="/About" element={<About />} />

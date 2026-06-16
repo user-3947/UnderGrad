@@ -6,6 +6,7 @@ interface StorageItem {
   name: string;
   isFolder: boolean;
   bucket: string;
+  url?: string;
 }
 
 interface NameCardsProps {
@@ -64,9 +65,9 @@ const Card: React.FC<{
   item: StorageItem;
   onClick: (item: StorageItem) => void;
 }> = ({ item, onClick }) => {
-  // Construct the file URL if it's a file
+  // Construct the file URL if it's a file. Prefer provided public `url` if present.
   const fileUrl = !item.isFolder
-    ? getFileUrl(item.bucket, item.name) // Adjust as needed for your path logic
+    ? (item.url ? item.url : getFileUrl(item.bucket, item.name))
     : null;
 
     const [showPopunder, setShowPopunder] = useState(false);    const handleDownload = (e: React.MouseEvent) => {
@@ -75,11 +76,12 @@ const Card: React.FC<{
     if (fileUrl) {
       // Pass fileUrl as a query parameter
       window.open(`/filedownloader?url=${encodeURIComponent(fileUrl)}`, '_blank', 'noopener,noreferrer');
-    }  }
+    }
+  }
 
   return (
     <div
-      className="p-4 text-center rounded-lg bg-card active:bg-card-active flex flex-col items-center"
+      className="p-4 text-center rounded-lg bg-card active:bg-card-active flex flex-col items-center cursor-pointer"
       onClick={() => onClick(item)}
     >
       <div className="w-full text-text flex justify-center items-center">

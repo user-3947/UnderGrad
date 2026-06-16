@@ -23,11 +23,11 @@ const Header = () => {
           </svg>
         </div>
       </div>
-      <div onClick={() => setEnrollOpen(!isEnrollOpen)}
-      className="mr-2 rounded-lg bg-button px-2 py-1 justify-end cursor-pointer"> {/* Enroll / Joined */}
+      {/* <div onClick={() => setEnrollOpen(!isEnrollOpen)}
+      className="mr-2 rounded-lg bg-button px-2 py-1 justify-end cursor-pointer"> 
         <span className="text-text">Enroll</span>
         <EnrollForm isOpen={isEnrollOpen} onClose={() => setEnrollOpen(!isEnrollOpen)} />
-      </div>
+      </div> */}
 
       {/* <button
             onClick={() => {
