@@ -26,11 +26,11 @@ interface Option {
 const Home: React.FC = () => {
   const navigate = useNavigate();
   const [items, setItems] = useState<StorageItem[]>([]);
-  const [notes, setNotes] = useState<StorageItem[]>([]);
+  const [_notes, setNotes] = useState<StorageItem[]>([]);
   const [CourseSelectedValue, setCourseSelectedValue] = useState<Option | null>(null);
   const [BatchSelectedValue, setBatchSelectedValue] = useState<Option | null>(null);
   
-  const [showExamNotes, setShowExamNotes] = useState(false);
+  const [_showExamNotes, setShowExamNotes] = useState(false);
 
   const courses = [
     { label: 'B.Sc. (C.S.)', id: 0 },
@@ -93,14 +93,14 @@ useEffect(() => {
     window.open(viewerPath, '_blank', 'noopener,noreferrer');
   };
 
-     const handleExamNotesClick = (note: StorageItem) => {
-    if (note.isFolder) {
-      navigate(`/folder/${encodeURIComponent(note.name)}`);
-      return;
-    }
-    const viewerPath = `/file/${note.bucket}/${encodeURIComponent(note.name)}`;
-    window.open(viewerPath, '_blank', 'noopener,noreferrer');
-  };
+  //    const handleExamNotesClick = (note: StorageItem) => {
+  //   if (note.isFolder) {
+  //     navigate(`/folder/${encodeURIComponent(note.name)}`);
+  //     return;
+  //   }
+  //   const viewerPath = `/file/${note.bucket}/${encodeURIComponent(note.name)}`;
+  //   window.open(viewerPath, '_blank', 'noopener,noreferrer');
+  // };
 
   return (
     <>

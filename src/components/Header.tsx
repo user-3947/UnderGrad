@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+// import { useState } from 'react';
 
-import EnrollForm from './EnrollForm';
+// import EnrollForm from './EnrollForm';
 
 const Header = () => {
-  const [isEnrollOpen, setEnrollOpen] = useState<boolean>(false);
+  // const [isEnrollOpen, setEnrollOpen] = useState<boolean>(false);
   const navigate = useNavigate();
 
   return (

@@ -6,7 +6,7 @@ import NameCards from "../components/NameCards";
 import Header from "../components/Header";
 // import InPagePush from '../MoneTag/InPagePush';
 // import Multitag from "../MoneTag/Multitag";
-import VideoReferences from "../components/VideoReferences";
+// import VideoReferences from "../components/VideoReferences";
 
 interface StorageItem {
   name: string;
